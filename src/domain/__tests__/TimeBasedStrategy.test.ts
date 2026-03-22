@@ -32,14 +32,10 @@ describe('TimeBasedStrategy', () => {
     });
 
     it('define surfaceAt entre 30 e 365 dias (produção)', () => {
-      const original = (globalThis as any).__DEV__;
-      (globalThis as any).__DEV__ = false;
-
+      const prodStrategy = new TimeBasedStrategy(false);
       const now = Date.now();
-      const surfaceAt = strategy.calculateSurfaceAt(now);
+      const surfaceAt = prodStrategy.calculateSurfaceAt(now);
       const daysUntilSurface = (surfaceAt - now) / DAY_IN_MS;
-
-      (globalThis as any).__DEV__ = original;
 
       expect(daysUntilSurface).toBeGreaterThanOrEqual(30);
       expect(daysUntilSurface).toBeLessThanOrEqual(365);

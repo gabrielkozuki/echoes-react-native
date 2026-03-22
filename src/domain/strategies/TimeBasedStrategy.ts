@@ -1,20 +1,19 @@
 import { Echo } from '../models/Echo';
 import { ISurfaceStrategy } from './ISurfaceStrategy';
 
-declare const __DEV__: boolean;
-
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const DEV_MS = 30 * 1000; // awakes in 30 seconds
 
 const randomBetween = (minDays: number, maxDays: number): number => {
   const range = maxDays - minDays;
-  
   return (minDays + Math.random() * range) * DAY_IN_MS;
 };
 
 export class TimeBasedStrategy implements ISurfaceStrategy {
+  constructor(private readonly devMode: boolean = false) {}
+
   calculateSurfaceAt(createdAt: number): number {
-    if (__DEV__) {
+    if (this.devMode) {
       return createdAt + DEV_MS;
     }
 
