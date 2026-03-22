@@ -11,7 +11,8 @@ import { typography } from '@/presentation/theme/typography';
 import { spacing } from '@/presentation/theme/spacing';
 import HomeScreen from '@/presentation/screens/home/HomeScreen';
 import ConstellationScreen from '@/presentation/screens/constellation/ConstellationScreen';
-import CreateEchoScreen from '@/presentation/screens/create-echo/CreateEchoScreen';
+import GameSearchScreen from '@/presentation/screens/game-search/GameSearchScreen';
+import WriteEchoScreen from '@/presentation/screens/write-echo/WriteEchoScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -43,8 +44,8 @@ const MainTabs = () => {
       },
     })}
   >
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="Constellation" component={ConstellationScreen} />
+    <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Início' }} />
+    <Tab.Screen name="Constellation" component={ConstellationScreen} options={{ title: 'Constelação' }} />
   </Tab.Navigator>
   );
 };
@@ -53,11 +54,8 @@ export const AppNavigator = () => (
   <NavigationContainer>
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MainTabs" component={MainTabs} />
-      <Stack.Screen
-        name="CreateEcho"
-        component={CreateEchoScreen}
-        options={{ presentation: 'modal' }}
-      />
+      <Stack.Screen name="GameSearch" component={GameSearchScreen} options={{ presentation: 'modal' }} />
+      <Stack.Screen name="WriteEcho" component={WriteEchoScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );

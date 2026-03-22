@@ -38,7 +38,7 @@ export class RawgService {
   }
 
   async search(query: string): Promise<Game[]> {
-    const url = `${BASE_URL}/games?search=${encodeURIComponent(query)}&key=${this.apiKey}&ordering=-added&page_size=15`;
+    const url = `${BASE_URL}/games?search=${encodeURIComponent(query)}&key=${this.apiKey}&search_precise=true&page_size=15`;
     const response = await fetch(url);
 
     if (!response.ok) {

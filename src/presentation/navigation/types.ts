@@ -2,7 +2,8 @@ import { Game } from '@/domain/models/Game';
 
 export type RootStackParamList = {
   MainTabs: undefined;
-  CreateEcho: { game?: Game } | undefined;
+  GameSearch: undefined;
+  WriteEcho: { game: Game };
 };
 
 export type MainTabParamList = {
