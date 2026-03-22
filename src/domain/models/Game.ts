@@ -3,4 +3,5 @@ export interface Game {
   name: string;
   coverUrl: string | null;
   genre: string | null;
+  platforms?: string[];
 }

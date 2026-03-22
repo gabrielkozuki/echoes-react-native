@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { create, StoreApi, UseBoundStore } from 'zustand';
-import { Echo } from '../../domain/models/Echo';
-import { Game } from '../../domain/models/Game';
-import { DIContainer } from '../../di/DIContainer';
-import { useDI } from '../../di/DIContext';
+import { Echo } from '@/domain/models/Echo';
+import { Game } from '@/domain/models/Game';
+import { DIContainer } from '@/di/DIContainer';
+import { useDI } from '@/di/DIContext';
 
 interface EchoState {
   echoes: Echo[];
@@ -13,7 +13,7 @@ interface EchoState {
 
 interface EchoActions {
   loadEchoes: () => Promise<void>;
-  addEcho: (game: Game, text: string) => Promise<void>;
+  addEcho: (game: Game, text: string, platform?: string | null, moodTags?: string[]) => Promise<void>;
   dismissResurgence: () => void;
 }
 
@@ -31,10 +31,12 @@ export const createEchoStore = (container: DIContainer) =>
       set({ echoes, loading: false });
     },
 
-    addEcho: async (game: Game, text: string) => {
+    addEcho: async (game: Game, text: string, platform = null, moodTags = []) => {
       const { echo, resurgence } = await container.createEchoUseCase.execute({
         game,
         text,
+        platform,
+        moodTags,
       });
       set((state) => ({ echoes: [echo, ...state.echoes], resurgence }));
     },

@@ -1,4 +1,4 @@
-import { Echo } from '../models/Echo';
+import { Echo } from '@/domain/models/Echo';
 
 export interface ISurfaceStrategy {
   calculateSurfaceAt(createdAt: number): number;

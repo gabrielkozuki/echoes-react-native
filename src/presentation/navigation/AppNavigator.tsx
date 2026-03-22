@@ -3,19 +3,23 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { RootStackParamList, MainTabParamList } from './types';
-import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
-import { spacing } from '../theme/spacing';
-import HomeScreen from '../screens/home/HomeScreen';
-import ConstellationScreen from '../screens/constellation/ConstellationScreen';
-import CreateEchoScreen from '../screens/create-echo/CreateEchoScreen';
+import { RootStackParamList, MainTabParamList } from '@/presentation/navigation/types';
+import { colors } from '@/presentation/theme/colors';
+import { typography } from '@/presentation/theme/typography';
+import { spacing } from '@/presentation/theme/spacing';
+import HomeScreen from '@/presentation/screens/home/HomeScreen';
+import ConstellationScreen from '@/presentation/screens/constellation/ConstellationScreen';
+import CreateEchoScreen from '@/presentation/screens/create-echo/CreateEchoScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
-const MainTabs = () => (
+const MainTabs = () => {
+  const insets = useSafeAreaInsets();
+
+  return (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       headerShown: false,
@@ -23,6 +27,8 @@ const MainTabs = () => (
         backgroundColor: colors.surface,
         borderTopColor: colors.border,
         paddingTop: spacing.xs,
+        paddingBottom: insets.bottom + spacing.md,
+        height: 56 + insets.bottom + spacing.md,
       },
       tabBarActiveTintColor: colors.text,
       tabBarInactiveTintColor: colors.textMuted,
@@ -40,7 +46,8 @@ const MainTabs = () => (
     <Tab.Screen name="Home" component={HomeScreen} />
     <Tab.Screen name="Constellation" component={ConstellationScreen} />
   </Tab.Navigator>
-);
+  );
+};
 
 export const AppNavigator = () => (
   <NavigationContainer>

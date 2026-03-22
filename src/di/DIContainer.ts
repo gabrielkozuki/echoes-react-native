@@ -1,12 +1,12 @@
 import { SQLiteDatabase } from 'expo-sqlite';
 
 declare const __DEV__: boolean;
-import { IEchoRepository } from '../domain/models/IEchoRepository';
-import { ISurfaceStrategy } from '../domain/strategies/ISurfaceStrategy';
-import { CreateEchoUseCase } from '../domain/usecases/CreateEchoUseCase';
-import { EchoRepository } from '../data/repositories/EchoRepository';
-import { RawgService } from '../data/services/RawgService';
-import { TimeBasedStrategy } from '../domain/strategies/TimeBasedStrategy';
+import { IEchoRepository } from '@/domain/models/IEchoRepository';
+import { ISurfaceStrategy } from '@/domain/strategies/ISurfaceStrategy';
+import { CreateEchoUseCase } from '@/domain/usecases/CreateEchoUseCase';
+import { EchoRepository } from '@/data/repositories/EchoRepository';
+import { RawgService } from '@/data/services/RawgService';
+import { TimeBasedStrategy } from '@/domain/strategies/TimeBasedStrategy';
 
 export interface DIContainer {
   echoRepository: IEchoRepository;

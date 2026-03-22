@@ -9,7 +9,9 @@ export const CREATE_ECHOES_TABLE = `
     created_at INTEGER NOT NULL,
     surface_at INTEGER NOT NULL,
     surfaced_at INTEGER,
-    intensity REAL NOT NULL
+    intensity REAL NOT NULL,
+    platform TEXT,
+    mood_tags TEXT NOT NULL DEFAULT '[]'
   );
 `;
 

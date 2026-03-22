@@ -1,14 +1,17 @@
-import { v4 as uuidv4 } from 'uuid';
-import { Echo } from '../models/Echo';
-import { Game } from '../models/Game';
-import { IEchoRepository } from '../models/IEchoRepository';
-import { ISurfaceStrategy } from '../strategies/ISurfaceStrategy';
+import uuid from 'react-native-uuid';
+
+import { Echo } from '@/domain/models/Echo';
+import { Game } from '@/domain/models/Game';
+import { IEchoRepository } from '@/domain/models/IEchoRepository';
+import { ISurfaceStrategy } from '@/domain/strategies/ISurfaceStrategy';
 
 const MAX_INTENSITY_TEXT_LENGTH = 1500;
 
 interface CreateEchoParams {
   game: Game;
   text: string;
+  platform?: string | null;
+  moodTags?: string[];
   checkResurgence?: boolean;
 }
 
@@ -24,7 +27,7 @@ export class CreateEchoUseCase {
   ) {}
 
   async execute(params: CreateEchoParams): Promise<CreateEchoResult> {
-    const { game, text, checkResurgence = true } = params;
+    const { game, text, platform = null, moodTags = [], checkResurgence = true } = params;
     const trimmedText = text.trim();
 
     if (!trimmedText) {
@@ -33,7 +36,7 @@ export class CreateEchoUseCase {
 
     const now = Date.now();
     const echo: Echo = {
-      id: uuidv4(),
+      id: String(uuid.v4()),
       gameId: game.id,
       gameName: game.name,
       gameCoverUrl: game.coverUrl,
@@ -43,6 +46,8 @@ export class CreateEchoUseCase {
       surfaceAt: this.strategy.calculateSurfaceAt(now),
       surfacedAt: null,
       intensity: Math.min(trimmedText.length / MAX_INTENSITY_TEXT_LENGTH, 1),
+      platform,
+      moodTags,
     };
 
     await this.repository.create(echo);

@@ -1,6 +1,6 @@
 import { SQLiteDatabase } from 'expo-sqlite';
-import { Echo } from '../../domain/models/Echo';
-import { IEchoRepository } from '../../domain/models/IEchoRepository';
+import { Echo } from '@/domain/models/Echo';
+import { IEchoRepository } from '@/domain/models/IEchoRepository';
 
 interface EchoRow {
   id: string;
@@ -13,6 +13,8 @@ interface EchoRow {
   surface_at: number;
   surfaced_at: number | null;
   intensity: number;
+  platform: string | null;
+  mood_tags: string;
 }
 
 const toEcho = (row: EchoRow): Echo => ({
@@ -26,6 +28,8 @@ const toEcho = (row: EchoRow): Echo => ({
   surfaceAt: row.surface_at,
   surfacedAt: row.surfaced_at,
   intensity: row.intensity,
+  platform: row.platform,
+  moodTags: JSON.parse(row.mood_tags ?? '[]'),
 });
 
 export class EchoRepository implements IEchoRepository {
@@ -34,8 +38,8 @@ export class EchoRepository implements IEchoRepository {
   async create(echo: Echo): Promise<void> {
     await this.db.runAsync(
       `INSERT INTO echoes
-        (id, game_id, game_name, game_cover_url, game_genre, text, created_at, surface_at, surfaced_at, intensity)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        (id, game_id, game_name, game_cover_url, game_genre, text, created_at, surface_at, surfaced_at, intensity, platform, mood_tags)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         echo.id,
         echo.gameId,
@@ -47,6 +51,8 @@ export class EchoRepository implements IEchoRepository {
         echo.surfaceAt,
         echo.surfacedAt,
         echo.intensity,
+        echo.platform,
+        JSON.stringify(echo.moodTags),
       ],
     );
   }

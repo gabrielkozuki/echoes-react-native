@@ -1,8 +1,8 @@
 /**
  * @jest-environment node
  */
-import { EchoRepository } from '../repositories/EchoRepository';
-import { Echo } from '../../domain/models/Echo';
+import { EchoRepository } from '@/data/repositories/EchoRepository';
+import { Echo } from '@/domain/models/Echo';
 
 const makeEcho = (): Echo => ({
   id: 'echo-1',
@@ -15,6 +15,8 @@ const makeEcho = (): Echo => ({
   surfaceAt: 1700000000000 + 60 * 24 * 60 * 60 * 1000,
   surfacedAt: null,
   intensity: 0.5,
+  platform: 'PS5',
+  moodTags: ['épico'],
 });
 
 const makeMockDb = () => ({
@@ -49,6 +51,8 @@ describe('EchoRepository', () => {
       surface_at: echo.surfaceAt,
       surfaced_at: echo.surfacedAt,
       intensity: echo.intensity,
+      platform: echo.platform,
+      mood_tags: JSON.stringify(echo.moodTags),
     };
 
     const db = makeMockDb();

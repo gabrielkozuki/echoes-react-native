@@ -1,5 +1,5 @@
-import { Echo } from '../models/Echo';
-import { ISurfaceStrategy } from './ISurfaceStrategy';
+import { Echo } from '@/domain/models/Echo';
+import { ISurfaceStrategy } from '@/domain/strategies/ISurfaceStrategy';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const DEV_MS = 30 * 1000; // awakes in 30 seconds

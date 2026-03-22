@@ -1,8 +1,8 @@
 /**
  * @jest-environment node
  */
-import { TimeBasedStrategy } from '../strategies/TimeBasedStrategy';
-import { Echo } from '../models/Echo';
+import { TimeBasedStrategy } from '@/domain/strategies/TimeBasedStrategy';
+import { Echo } from '@/domain/models/Echo';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
@@ -17,6 +17,8 @@ const makeEcho = (overrides: Partial<Echo> = {}): Echo => ({
   surfaceAt: Date.now() - 1,
   surfacedAt: null,
   intensity: 0.5,
+  platform: null,
+  moodTags: [],
   ...overrides,
 });
 

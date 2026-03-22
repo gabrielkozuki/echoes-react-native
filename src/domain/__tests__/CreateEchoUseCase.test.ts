@@ -1,11 +1,11 @@
 /**
  * @jest-environment node
  */
-import { CreateEchoUseCase } from '../usecases/CreateEchoUseCase';
-import { TimeBasedStrategy } from '../strategies/TimeBasedStrategy';
-import { IEchoRepository } from '../models/IEchoRepository';
-import { Echo } from '../models/Echo';
-import { Game } from '../models/Game';
+import { CreateEchoUseCase } from '@/domain/usecases/CreateEchoUseCase';
+import { TimeBasedStrategy } from '@/domain/strategies/TimeBasedStrategy';
+import { IEchoRepository } from '@/domain/models/IEchoRepository';
+import { Echo } from '@/domain/models/Echo';
+import { Game } from '@/domain/models/Game';
 
 const makeGame = (): Game => ({
   id: 'game-1',
@@ -78,6 +78,8 @@ describe('CreateEchoUseCase', () => {
       surfaceAt: Date.now() - 1000,
       surfacedAt: null,
       intensity: 0.8,
+      platform: null,
+      moodTags: [],
     };
 
     const repository = makeMockRepository([sleepingEcho]);

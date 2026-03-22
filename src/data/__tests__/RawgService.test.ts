@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { RawgService } from '../services/RawgService';
+import { RawgService } from '@/data/services/RawgService';
 
 const makeRawgResponse = () => ({
   results: [
@@ -37,6 +37,7 @@ describe('RawgService', () => {
       name: 'Death Stranding',
       coverUrl: 'https://example.com/cover.jpg',
       genre: 'Adventure',
+      platforms: [],
     });
   });
 
