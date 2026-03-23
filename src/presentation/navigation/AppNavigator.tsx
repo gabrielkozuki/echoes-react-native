@@ -13,6 +13,7 @@ import HomeScreen from '@/presentation/screens/home/HomeScreen';
 import ConstellationScreen from '@/presentation/screens/constellation/ConstellationScreen';
 import GameSearchScreen from '@/presentation/screens/game-search/GameSearchScreen';
 import WriteEchoScreen from '@/presentation/screens/write-echo/WriteEchoScreen';
+import OnboardingScreen from '@/presentation/screens/onboarding/OnboardingScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -50,9 +51,14 @@ const MainTabs = () => {
   );
 };
 
-export const AppNavigator = () => (
+interface Props {
+  initialRoute: 'Onboarding' | 'MainTabs';
+}
+
+export const AppNavigator = ({ initialRoute }: Props) => (
   <NavigationContainer>
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="MainTabs" component={MainTabs} />
       <Stack.Screen name="GameSearch" component={GameSearchScreen} options={{ presentation: 'modal' }} />
       <Stack.Screen name="WriteEcho" component={WriteEchoScreen} />
