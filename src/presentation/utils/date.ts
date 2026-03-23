@@ -5,6 +5,13 @@ export const formatDate = (ms: number): string =>
     year: 'numeric',
   });
 
+export const formatDateLong = (ms: number): string =>
+  new Date(ms).toLocaleDateString('pt-BR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
 export const timeAgo = (ms: number): string => {
   const days = Math.floor((Date.now() - ms) / (1000 * 60 * 60 * 24));
 

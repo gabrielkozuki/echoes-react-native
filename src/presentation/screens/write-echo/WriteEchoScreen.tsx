@@ -76,7 +76,7 @@ const WriteEchoScreen = () => {
                   </View>
                 )}
                 <TouchableOpacity onPress={openOST} hitSlop={12} style={styles.ostButton}>
-                  <Ionicons name="musical-notes-outline" size={16} color={colors.textMuted} />
+                  <Ionicons name="musical-notes-outline" size={16} color={colors.text} />
                   <Text style={styles.ostLabel}>Ouvir OST</Text>
                 </TouchableOpacity>
               </View>
@@ -168,12 +168,12 @@ const styles = StyleSheet.create({
     height: 210,
   },
   gameBannerImage: {
-    opacity: 0.35,
+    opacity: 0.55,
     resizeMode: 'cover',
   },
   bannerOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(10, 10, 20, 0.5)',
+    backgroundColor: 'transparent',
     justifyContent: 'space-between',
     padding: spacing.md,
   },
@@ -195,6 +195,9 @@ const styles = StyleSheet.create({
     ...typography.subtitle,
     color: colors.text,
     flex: 1,
+    textShadowColor: 'rgba(0,0,0,0.9)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
   },
   genreBadge: {
     paddingHorizontal: spacing.sm,
@@ -210,10 +213,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
   },
   ostLabel: {
     ...typography.caption,
-    color: colors.textMuted,
+    color: colors.text,
     letterSpacing: 1,
   },
   formScroll: {

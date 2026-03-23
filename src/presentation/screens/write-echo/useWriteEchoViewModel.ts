@@ -30,7 +30,9 @@ export const useWriteEchoViewModel = (game: Game) => {
     
     try {
       await addEcho(game, text, selectedPlatform, selectedTags);
-      navigation.dispatch(StackActions.popToTop());
+      requestAnimationFrame(() => {
+        navigation.dispatch(StackActions.popToTop());
+      });
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Erro ao salvar');
       setSaving(false);
