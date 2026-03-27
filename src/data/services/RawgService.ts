@@ -1,4 +1,5 @@
 import { Game } from '@/domain/models/Game';
+import { IGamesService } from '@/domain/models/IGamesService';
 
 const BASE_URL = 'https://api.rawg.io/api';
 
@@ -22,7 +23,7 @@ const toGame = (game: RawgGame): Game => ({
   platforms: game.platforms?.map(p => p.platform.name) ?? [],
 });
 
-export class RawgService {
+export class RawgService implements IGamesService {
   private readonly apiKey = process.env.EXPO_PUBLIC_RAWG_API_KEY ?? '';
 
   async getTrending(): Promise<Game[]> {

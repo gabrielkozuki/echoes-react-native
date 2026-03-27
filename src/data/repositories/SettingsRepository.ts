@@ -1,6 +1,7 @@
 import { SQLiteDatabase } from 'expo-sqlite';
+import { ISettingsRepository } from '@/domain/models/ISettingsRepository';
 
-export class SettingsRepository {
+export class SettingsRepository implements ISettingsRepository {
   constructor(private readonly db: SQLiteDatabase) {}
 
   async get(key: string): Promise<string | null> {
