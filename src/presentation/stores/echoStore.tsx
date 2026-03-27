@@ -1,46 +1,22 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { create, StoreApi, UseBoundStore } from 'zustand';
 import { Echo } from '@/domain/models/Echo';
-import { Game } from '@/domain/models/Game';
-import { DIContainer } from '@/di/DIContainer';
-import { useDI } from '@/di/DIContext';
 
 interface EchoState {
-  echoes: Echo[];
-  loading: boolean;
   resurgence: Echo | null;
 }
 
 interface EchoActions {
-  loadEchoes: () => Promise<void>;
-  addEcho: (game: Game, text: string, platform?: string | null, moodTags?: string[]) => Promise<void>;
+  setResurgence: (echo: Echo) => void;
   dismissResurgence: () => void;
 }
 
 export type EchoStore = EchoState & EchoActions;
 
-export const createEchoStore = (container: DIContainer) =>
-  create<EchoStore>((set) => ({
-    echoes: [],
-    loading: false,
+export const createEchoStore = () =>
+  create<EchoStore>()((set) => ({
     resurgence: null,
-
-    loadEchoes: async () => {
-      set({ loading: true });
-      const echoes = await container.echoRepository.findAll();
-      set({ echoes, loading: false });
-    },
-
-    addEcho: async (game: Game, text: string, platform = null, moodTags = []) => {
-      const { echo, resurgence } = await container.createEchoUseCase.execute({
-        game,
-        text,
-        platform,
-        moodTags,
-      });
-      set((state) => ({ echoes: [echo, ...state.echoes], resurgence }));
-    },
-
+    setResurgence: (echo) => set({ resurgence: echo }),
     dismissResurgence: () => set({ resurgence: null }),
   }));
 
@@ -53,8 +29,7 @@ interface Props {
 }
 
 export const StoreProvider = ({ children }: Props) => {
-  const container = useDI();
-  const store = useMemo(() => createEchoStore(container), [container]);
+  const store = useMemo(() => createEchoStore(), []);
 
   return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
 };

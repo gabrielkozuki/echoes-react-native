@@ -2,13 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { DatabaseProvider } from './src/data/database/DatabaseProvider';
 import { DIProvider, useDI } from './src/di/DIContext';
 import { StoreProvider } from './src/presentation/stores/echoStore';
 import { AppNavigator } from './src/presentation/navigation/AppNavigator';
-import { SurfaceModal } from './src/presentation/components/SurfaceModal';
+import { SurfaceModal } from './src/presentation/screens/resurgence/SurfaceModal';
 import { colors } from './src/presentation/theme/colors';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+      retry: 1,
+    },
+  },
+});
 
 type InitialRoute = 'Onboarding' | 'MainTabs';
 
@@ -45,10 +55,12 @@ export default function App() {
     <SafeAreaProvider>
       <DatabaseProvider>
         <DIProvider>
-          <StoreProvider>
-            <StatusBar style="light" />
-            <AppEntry />
-          </StoreProvider>
+          <QueryClientProvider client={queryClient}>
+            <StoreProvider>
+              <StatusBar style="light" />
+              <AppEntry />
+            </StoreProvider>
+          </QueryClientProvider>
         </DIProvider>
       </DatabaseProvider>
     </SafeAreaProvider>

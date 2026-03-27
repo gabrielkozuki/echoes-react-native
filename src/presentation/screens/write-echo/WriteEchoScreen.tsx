@@ -13,6 +13,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -141,7 +142,12 @@ const WriteEchoScreen = () => {
             styles.saveButton,
             { backgroundColor: canSave ? accentColor : colors.surface, paddingBottom: insets.bottom + spacing.md },
           ]}
-          onPress={save}
+          onPress={async () => {
+            const saved = await save();
+            if (saved) {
+              requestAnimationFrame(() => navigation.dispatch(StackActions.popToTop()));
+            }
+          }}
           disabled={!canSave || saving}
           accessibilityLabel="Guardar echo"
         >

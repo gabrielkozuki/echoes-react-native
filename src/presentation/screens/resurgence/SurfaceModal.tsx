@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Modal,
   View,
@@ -14,15 +14,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useEchoStore } from '@/presentation/stores/echoStore';
+import { useSurfaceModalViewModel } from './useSurfaceModalViewModel';
 import { colors, getGenreColor } from '@/presentation/theme/colors';
 import { spacing } from '@/presentation/theme/spacing';
 import { typography } from '@/presentation/theme/typography';
 import { formatDateLong } from '@/presentation/utils/date';
-
-type Phase = 'intro' | 'echo';
-
-const daysSince = (ms: number) => Math.floor((Date.now() - ms) / (1000 * 60 * 60 * 24));
 
 // cards
 const IntroCard = ({ onReveal }: { onReveal: () => void }) => {
@@ -76,9 +72,15 @@ const IntroCard = ({ onReveal }: { onReveal: () => void }) => {
   );
 };
 
-const EchoCard = ({ onDismiss }: { onDismiss: () => void }) => {
-  const store = useEchoStore();
-  const resurgence = store(s => s.resurgence)!;
+const EchoCard = ({
+  resurgence,
+  daysLabel,
+  onDismiss,
+}: {
+  resurgence: NonNullable<ReturnType<typeof useSurfaceModalViewModel>['resurgence']>;
+  daysLabel: string;
+  onDismiss: () => void;
+}) => {
   const insets = useSafeAreaInsets();
 
   const coverOpacity = useRef(new Animated.Value(0)).current;
@@ -108,8 +110,6 @@ const EchoCard = ({ onDismiss }: { onDismiss: () => void }) => {
   }, []);
 
   const accentColor = getGenreColor(resurgence.gameGenre);
-  const days = daysSince(resurgence.createdAt);
-  const daysLabel = days === 0 ? 'de hoje' : days === 1 ? 'de ontem' : `de ${days} dias atrás`;
 
   const openOst = () => {
     const q = encodeURIComponent(`${resurgence.gameName} OST`);
@@ -214,17 +214,7 @@ const EchoCard = ({ onDismiss }: { onDismiss: () => void }) => {
 
 // modal
 export const SurfaceModal = () => {
-  const store = useEchoStore();
-  const resurgence = store(s => s.resurgence);
-  const dismiss    = store(s => s.dismissResurgence);
-
-  const [phase, setPhase] = useState<Phase>('intro');
-
-  useEffect(() => {
-    if (resurgence) setPhase('intro');
-  }, [resurgence]);
-
-  const handleReveal = useCallback(() => setPhase('echo'), []);
+  const { resurgence, dismiss, phase, reveal, daysLabel } = useSurfaceModalViewModel();
 
   if (!resurgence) return null;
 
@@ -232,8 +222,8 @@ export const SurfaceModal = () => {
     <Modal transparent animationType="fade" visible statusBarTranslucent>
       <View style={styles.modalRoot}>
         {phase === 'intro'
-          ? <IntroCard onReveal={handleReveal} />
-          : <EchoCard onDismiss={dismiss} />
+          ? <IntroCard onReveal={reveal} />
+          : <EchoCard resurgence={resurgence} daysLabel={daysLabel} onDismiss={dismiss} />
         }
       </View>
     </Modal>

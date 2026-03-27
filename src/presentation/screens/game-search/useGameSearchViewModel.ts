@@ -1,12 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { Game } from '@/domain/models/Game';
 import { useDI } from '@/di/DIContext';
-import { RootStackParamList } from '@/presentation/navigation/types';
-
-type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export const useGameSearchViewModel = () => {
   const [query, setQuery] = useState('');
@@ -15,11 +10,10 @@ export const useGameSearchViewModel = () => {
   const [searchError, setSearchError] = useState(false);
 
   const { rawgService } = useDI();
-  const navigation = useNavigation<Nav>();
 
   const search = useCallback(async (q: string) => {
     if (!q.trim()) { setResults([]); return; }
-    
+
     setSearching(true);
 
     try {
@@ -39,9 +33,5 @@ export const useGameSearchViewModel = () => {
     return () => clearTimeout(timer);
   }, [query, search]);
 
-  const selectGame = (game: Game) => {
-    navigation.navigate('WriteEcho', { game });
-  };
-
-  return { query, setQuery, results, searching, searchError, selectGame };
+  return { query, setQuery, results, searching, searchError };
 };

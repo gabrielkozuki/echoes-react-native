@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
   ViewToken,
   FlatList as FlatListType,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -33,11 +35,11 @@ const PageResurgence = ({ width }: { width: number }) => (
   <View style={[styles.page, { width }]}>
     <View style={styles.pageContent}>
       <View style={styles.iconWrap}>
-        <Ionicons name="time-outline" size={48} color={colors.textMuted} />
+        <Ionicons name="planet-outline" size={48} color={colors.textMuted} />
       </View>
-      <Text style={styles.pageTitle}>o passado volta.</Text>
+      <Text style={styles.pageTitle}>lembra desse jogo?</Text>
       <Text style={styles.pageBody}>
-        {'você joga. sente. registra. e segue em frente.\n\npor baixo, o echo dorme — guardando tudo que você viveu. e um dia, quando você menos espera, ele acorda.'}
+        {'seus echoes adormecem.\n\ncada memória que você registra fica guardada, e volta quando você menos espera.'}
       </Text>
     </View>
   </View>
@@ -84,9 +86,16 @@ const Dots = ({ total, current }: { total: number; current: number }) => (
 const OnboardingScreen = () => {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
   const listRef = useRef<FlatListType<number>>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const { complete, completing } = useOnboardingViewModel();
+  const { complete, completing, completed } = useOnboardingViewModel();
+
+  useEffect(() => {
+    if (completed) {
+      navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'MainTabs' }] }));
+    }
+  }, [completed, navigation]);
 
   const pages = [0, 1, 2];
 

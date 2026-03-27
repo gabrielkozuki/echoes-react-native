@@ -9,19 +9,23 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 import { colors } from '@/presentation/theme/colors';
 import { spacing } from '@/presentation/theme/spacing';
 import { typography } from '@/presentation/theme/typography';
+import { RootStackParamList } from '@/presentation/navigation/types';
 import { GameSearchResult } from '@/presentation/components/GameSearchResult';
 import { useGameSearchViewModel } from './useGameSearchViewModel';
 
+type Nav = NativeStackNavigationProp<RootStackParamList>;
+
 const GameSearchScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const { query, setQuery, results, searching, searchError, selectGame } = useGameSearchViewModel();
+  const { query, setQuery, results, searching, searchError } = useGameSearchViewModel();
 
   return (
     <View style={styles.container}>
@@ -56,7 +60,7 @@ const GameSearchScreen = () => {
           data={results}
           keyExtractor={g => g.id}
           renderItem={({ item }) => (
-            <GameSearchResult game={item} onPress={() => selectGame(item)} />
+            <GameSearchResult game={item} onPress={() => navigation.navigate('WriteEcho', { game: item })} />
           )}
           keyboardShouldPersistTaps="handled"
         />

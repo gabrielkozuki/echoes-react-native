@@ -1,20 +1,14 @@
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { StackActions } from '@react-navigation/native';
 
 import { Game } from '@/domain/models/Game';
-import { useEchoStore } from '@/presentation/stores/echoStore';
+import { useAddEcho } from '@/presentation/hooks/echoHooks';
 
 export const useWriteEchoViewModel = (game: Game) => {
   const [text, setText] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const store = useEchoStore();
-  const addEcho = store(s => s.addEcho);
-  const navigation = useNavigation();
+  const { mutateAsync: addEcho, isPending: saving, error: mutationError } = useAddEcho();
 
   const toggleTag = (tag: string) => {
     setSelectedTags(prev =>
@@ -22,22 +16,20 @@ export const useWriteEchoViewModel = (game: Game) => {
     );
   };
 
-  const save = async () => {
-    if (!text.trim()) return;
-
-    setSaving(true);
-    setError(null);
-    
+  // returns true on success so the Screen can trigger navigation.
+  const save = async (): Promise<boolean> => {
+    if (!text.trim()) return false;
     try {
-      await addEcho(game, text, selectedPlatform, selectedTags);
-      requestAnimationFrame(() => {
-        navigation.dispatch(StackActions.popToTop());
-      });
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Erro ao salvar');
-      setSaving(false);
+      await addEcho({ game, text, platform: selectedPlatform, moodTags: selectedTags });
+      return true;
+    } catch {
+      return false;
     }
   };
+
+  const error = mutationError instanceof Error
+    ? mutationError.message
+    : mutationError ? 'Erro ao salvar' : null;
 
   return {
     text, setText,

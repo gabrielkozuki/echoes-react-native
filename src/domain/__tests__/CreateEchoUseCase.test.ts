@@ -16,9 +16,12 @@ const makeGame = (): Game => ({
 
 const makeMockRepository = (sleeping: Echo[] = []): IEchoRepository => ({
   create: jest.fn().mockResolvedValue(undefined),
-  findAll: jest.fn().mockResolvedValue([]),
   findSleeping: jest.fn().mockResolvedValue(sleeping),
   markSurfaced: jest.fn().mockResolvedValue(undefined),
+  findGameSummaries: jest.fn().mockResolvedValue([]),
+  findByGameId: jest.fn().mockResolvedValue([]),
+  findLatest: jest.fn().mockResolvedValue(null),
+  findCount: jest.fn().mockResolvedValue(0),
 });
 
 describe('CreateEchoUseCase', () => {
