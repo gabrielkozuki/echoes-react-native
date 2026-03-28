@@ -95,7 +95,7 @@ Every Echo receives a resurgence date calculated at the time of its creation (`s
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/seu-usuario/echoes.git
+git clone https://github.com/gabrielkozuki/echoes-react-native.git
 cd echoes
 
 # 2. Install dependencies
