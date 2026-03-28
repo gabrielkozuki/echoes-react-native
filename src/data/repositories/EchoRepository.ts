@@ -39,7 +39,7 @@ const toEcho = (row: EchoRow): Echo => ({
   surfacedAt: row.surfaced_at,
   intensity: row.intensity,
   platform: row.platform,
-  moodTags: JSON.parse(row.mood_tags ?? '[]'),
+  moodTags: (() => { try { return JSON.parse(row.mood_tags ?? '[]'); } catch { return []; } })(),
 });
 
 const toGameSummary = (row: GameSummaryRow): GameSummary => ({

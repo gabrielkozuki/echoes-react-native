@@ -14,10 +14,10 @@ export const useGameSearchViewModel = () => {
   const search = useCallback(async (q: string) => {
     if (!q.trim()) { setResults([]); return; }
 
+    setSearchError(false);
     setSearching(true);
 
     try {
-      setSearchError(false);
       const games = await rawgService.search(q);
       setResults(games);
     } catch {

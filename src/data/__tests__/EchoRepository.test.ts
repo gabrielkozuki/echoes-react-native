@@ -1,8 +1,15 @@
 /**
  * @jest-environment node
  */
+import { SQLiteDatabase } from 'expo-sqlite';
 import { EchoRepository } from '@/data/repositories/EchoRepository';
 import { Echo } from '@/domain/models/Echo';
+
+type MockDb = {
+  runAsync: jest.Mock;
+  getAllAsync: jest.Mock;
+  getFirstAsync: jest.Mock;
+};
 
 const makeEcho = (): Echo => ({
   id: 'echo-1',
@@ -34,7 +41,7 @@ const makeRow = (echo: Echo) => ({
   mood_tags: JSON.stringify(echo.moodTags),
 });
 
-const makeMockDb = () => ({
+const makeMockDb = (): MockDb => ({
   runAsync: jest.fn().mockResolvedValue(undefined),
   getAllAsync: jest.fn().mockResolvedValue([]),
   getFirstAsync: jest.fn().mockResolvedValue(null),
@@ -43,7 +50,7 @@ const makeMockDb = () => ({
 describe('EchoRepository', () => {
   it('create executa INSERT com os parâmetros corretos', async () => {
     const db = makeMockDb();
-    const repo = new EchoRepository(db as any);
+    const repo = new EchoRepository(db as unknown as SQLiteDatabase);
     const echo = makeEcho();
 
     await repo.create(echo);
@@ -66,7 +73,7 @@ describe('EchoRepository', () => {
 
     const db = makeMockDb();
     db.getAllAsync.mockResolvedValue([summaryRow]);
-    const repo = new EchoRepository(db as any);
+    const repo = new EchoRepository(db as unknown as SQLiteDatabase);
 
     const result = await repo.findGameSummaries();
 
@@ -88,7 +95,7 @@ describe('EchoRepository', () => {
     const echo = makeEcho();
     const db = makeMockDb();
     db.getAllAsync.mockResolvedValue([makeRow(echo)]);
-    const repo = new EchoRepository(db as any);
+    const repo = new EchoRepository(db as unknown as SQLiteDatabase);
 
     const result = await repo.findByGameId('game-1');
 
@@ -103,7 +110,7 @@ describe('EchoRepository', () => {
   it('findLatest retorna null quando não há echoes', async () => {
     const db = makeMockDb();
     db.getFirstAsync.mockResolvedValue(null);
-    const repo = new EchoRepository(db as any);
+    const repo = new EchoRepository(db as unknown as SQLiteDatabase);
 
     const result = await repo.findLatest();
 
@@ -114,7 +121,7 @@ describe('EchoRepository', () => {
     const echo = makeEcho();
     const db = makeMockDb();
     db.getFirstAsync.mockResolvedValue(makeRow(echo));
-    const repo = new EchoRepository(db as any);
+    const repo = new EchoRepository(db as unknown as SQLiteDatabase);
 
     const result = await repo.findLatest();
 
@@ -126,7 +133,7 @@ describe('EchoRepository', () => {
 
   it('markSurfaced executa UPDATE com id e timestamp corretos', async () => {
     const db = makeMockDb();
-    const repo = new EchoRepository(db as any);
+    const repo = new EchoRepository(db as unknown as SQLiteDatabase);
     const surfacedAt = Date.now();
 
     await repo.markSurfaced('echo-1', surfacedAt);

@@ -100,7 +100,7 @@ const OnboardingScreen = () => {
   const pages = [0, 1, 2];
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
-    if (viewableItems[0]) setCurrentPage(viewableItems[0].index ?? 0);
+    setCurrentPage(viewableItems[0]?.index ?? 0);
   }).current;
 
   const goNext = () => {
