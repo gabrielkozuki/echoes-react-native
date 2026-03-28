@@ -3,7 +3,7 @@
  */
 import { CreateEchoUseCase } from '@/domain/usecases/CreateEchoUseCase';
 import { TimeBasedStrategy } from '@/domain/strategies/TimeBasedStrategy';
-import { IEchoRepository } from '@/domain/models/IEchoRepository';
+import { IEchoWriteRepository } from '@/domain/models/IEchoRepository';
 import { Echo } from '@/domain/models/Echo';
 import { Game } from '@/domain/models/Game';
 
@@ -14,14 +14,10 @@ const makeGame = (): Game => ({
   genre: 'RPG',
 });
 
-const makeMockRepository = (sleeping: Echo[] = []): IEchoRepository => ({
+const makeMockRepository = (sleeping: Echo[] = []): IEchoWriteRepository => ({
   create: jest.fn().mockResolvedValue(undefined),
   findSleeping: jest.fn().mockResolvedValue(sleeping),
   markSurfaced: jest.fn().mockResolvedValue(undefined),
-  findGameSummaries: jest.fn().mockResolvedValue([]),
-  findByGameId: jest.fn().mockResolvedValue([]),
-  findLatest: jest.fn().mockResolvedValue(null),
-  findCount: jest.fn().mockResolvedValue(0),
 });
 
 describe('CreateEchoUseCase', () => {

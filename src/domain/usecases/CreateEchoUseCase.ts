@@ -2,7 +2,7 @@ import uuid from 'react-native-uuid';
 
 import { Echo } from '@/domain/models/Echo';
 import { Game } from '@/domain/models/Game';
-import { IEchoRepository } from '@/domain/models/IEchoRepository';
+import { IEchoWriteRepository } from '@/domain/models/IEchoRepository';
 import { ISurfaceStrategy } from '@/domain/strategies/ISurfaceStrategy';
 
 const MAX_INTENSITY_TEXT_LENGTH = 1500;
@@ -22,7 +22,7 @@ interface CreateEchoResult {
 
 export class CreateEchoUseCase {
   constructor(
-    private readonly repository: IEchoRepository,
+    private readonly repository: IEchoWriteRepository,
     private readonly strategy: ISurfaceStrategy,
   ) {}
 

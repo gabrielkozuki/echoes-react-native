@@ -20,6 +20,7 @@ Echoes is a game journal — a space to record your experiences, with a mechanic
 - [Dependency Injection](#dependency-injection)
 - [Tests](#tests)
 - [Database](#database)
+- [SOLID Principles](#solid-principles)
 - [Clean Code](#clean-code)
 
 ---
@@ -536,6 +537,84 @@ CREATE TABLE settings (
 ```
 
 Data stored exclusively on the device, with no authentication or account creation.
+
+---
+
+## SOLID Principles
+
+### S — Single Responsibility Principle
+
+Each module has a clear, single responsibility:
+
+- `CreateEchoUseCase` → orchestrates Echo creation and resurgence verification
+- `TimeBasedStrategy` → calculates when an Echo should resurface
+- `EchoRepository` → database access; `snake_case` ↔ `camelCase` mapping isolated here
+- `echoQueryKeys` → exclusively defines TanStack Query cache keys
+- ViewModels → state + callbacks; Screens → rendering
+
+### O — Open/Closed Principle
+
+Well represented by the Strategy Pattern:
+
+```typescript
+// To add a new strategy, just implement ISurfaceStrategy
+// without touching repositories or use cases
+export class GenreBasedStrategy implements ISurfaceStrategy {
+  calculateSurfaceAt(createdAt: number): number { ... }
+  findSleepingEcho(echoes: Echo[]): Echo | null { ... }
+}
+```
+
+New resurgence behaviors → new class, zero modification to existing code.
+
+### L — Liskov Substitution Principle
+
+Implementations are substitutable by their contracts without breaking the system:
+
+```typescript
+// CreateEchoUseCase receives IEchoWriteRepository
+// EchoRepository (SQLite), mock (tests) and any future implementation are interchangeable
+const useCase = new CreateEchoUseCase(mockRepository, strategy)
+```
+
+In tests, the mock is injected directly, evidence of LSP working.
+
+### I — Interface Segregation Principle
+
+`IEchoRepository` is split into two interfaces so each consumer depends only on what it actually uses:
+
+```typescript
+// CreateEchoUseCase only needs write + surface operations
+export interface IEchoWriteRepository {
+  create(echo: Echo): Promise<void>
+  findSleeping(): Promise<Echo[]>
+  markSurfaced(id: string, surfacedAt: number): Promise<void>
+}
+
+// Hooks and queries need the full read surface
+export interface IEchoRepository extends IEchoWriteRepository {
+  findGameSummaries(): Promise<GameSummary[]>
+  findByGameId(gameId: string): Promise<Echo[]>
+  findLatest(): Promise<Echo | null>
+  findCount(): Promise<number>
+}
+```
+
+`CreateEchoUseCase` depends on `IEchoWriteRepository`. `EchoRepository` implements `IEchoRepository` (which extends `IEchoWriteRepository`) — the concrete class required no changes.
+
+### D — Dependency Inversion Principle
+
+All communication between layers goes through abstractions:
+
+```
+Presentation → echoHooks → useDI() → IEchoRepository
+                                   → IGamesService
+                                   → ISurfaceStrategy
+
+Domain (CreateEchoUseCase) → IEchoWriteRepository (never EchoRepository)
+```
+
+`DIContainer` concentrates composition, and `DIProvider` injects via Context.
 
 ---
 
