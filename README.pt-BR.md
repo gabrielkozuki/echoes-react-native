@@ -96,7 +96,7 @@ Todo Echo recebe uma data de ressurgência calculada no momento do registro (`su
 ```bash
 # 1. Clonar o repositório
 git clone https://github.com/gabrielkozuki/echoes-react-native.git
-cd echoes
+cd echoes-react-native
 
 # 2. Instalar dependências
 npm install
