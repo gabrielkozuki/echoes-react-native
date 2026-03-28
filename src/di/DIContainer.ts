@@ -1,4 +1,5 @@
 import { SQLiteDatabase } from 'expo-sqlite';
+import uuid from 'react-native-uuid';
 
 declare const __DEV__: boolean;
 import { IEchoRepository } from '@/domain/models/IEchoRepository';
@@ -32,7 +33,7 @@ export const createContainer = (db: SQLiteDatabase): DIContainer => {
     settingsRepository,
     rawgService: new RawgService(),
     surfaceStrategy,
-    createEchoUseCase: new CreateEchoUseCase(echoRepository, surfaceStrategy),
+    createEchoUseCase: new CreateEchoUseCase(echoRepository, surfaceStrategy, () => String(uuid.v4())),
     completeOnboardingUseCase: new CompleteOnboardingUseCase(settingsRepository),
   };
 };

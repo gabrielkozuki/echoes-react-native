@@ -25,7 +25,7 @@ describe('CreateEchoUseCase', () => {
 
   it('define surfaceAt no futuro ao criar um Echo', async () => {
     const repository = makeMockRepository();
-    const useCase = new CreateEchoUseCase(repository, strategy);
+    const useCase = new CreateEchoUseCase(repository, strategy, () => 'test-id');
 
     const { echo } = await useCase.execute({
       game: makeGame(),
@@ -37,7 +37,7 @@ describe('CreateEchoUseCase', () => {
 
   it('persiste o Echo no repositório após criação', async () => {
     const repository = makeMockRepository();
-    const useCase = new CreateEchoUseCase(repository, strategy);
+    const useCase = new CreateEchoUseCase(repository, strategy, () => 'test-id');
 
     await useCase.execute({
       game: makeGame(),
@@ -49,7 +49,7 @@ describe('CreateEchoUseCase', () => {
 
   it('lança erro ao tentar criar Echo com texto vazio', async () => {
     const repository = makeMockRepository();
-    const useCase = new CreateEchoUseCase(repository, strategy);
+    const useCase = new CreateEchoUseCase(repository, strategy, () => 'test-id');
 
     await expect(
       useCase.execute({ game: makeGame(), text: '' }),
@@ -58,7 +58,7 @@ describe('CreateEchoUseCase', () => {
 
   it('lança erro ao tentar criar Echo com texto apenas de espaços', async () => {
     const repository = makeMockRepository();
-    const useCase = new CreateEchoUseCase(repository, strategy);
+    const useCase = new CreateEchoUseCase(repository, strategy, () => 'test-id');
 
     await expect(
       useCase.execute({ game: makeGame(), text: '   ' }),
@@ -82,7 +82,7 @@ describe('CreateEchoUseCase', () => {
     };
 
     const repository = makeMockRepository([sleepingEcho]);
-    const useCase = new CreateEchoUseCase(repository, strategy);
+    const useCase = new CreateEchoUseCase(repository, strategy, () => 'test-id');
 
     const { resurgence } = await useCase.execute({
       game: makeGame(),
@@ -98,7 +98,7 @@ describe('CreateEchoUseCase', () => {
 
   it('retorna resurgence null quando não há Echoes adormecidos', async () => {
     const repository = makeMockRepository([]);
-    const useCase = new CreateEchoUseCase(repository, strategy);
+    const useCase = new CreateEchoUseCase(repository, strategy, () => 'test-id');
 
     const { resurgence } = await useCase.execute({
       game: makeGame(),

@@ -1,5 +1,3 @@
-import uuid from 'react-native-uuid';
-
 import { Echo } from '@/domain/models/Echo';
 import { Game } from '@/domain/models/Game';
 import { IEchoWriteRepository } from '@/domain/models/IEchoRepository';
@@ -24,6 +22,7 @@ export class CreateEchoUseCase {
   constructor(
     private readonly repository: IEchoWriteRepository,
     private readonly strategy: ISurfaceStrategy,
+    private readonly generateId: () => string,
   ) {}
 
   async execute(params: CreateEchoParams): Promise<CreateEchoResult> {
@@ -36,7 +35,7 @@ export class CreateEchoUseCase {
 
     const now = Date.now();
     const echo: Echo = {
-      id: String(uuid.v4()),
+      id: this.generateId(),
       gameId: game.id,
       gameName: game.name,
       gameCoverUrl: game.coverUrl,

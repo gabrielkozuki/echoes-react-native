@@ -227,7 +227,7 @@ The project is organized in three layers with unidirectional dependencies pointi
 
 ### Domain Layer
 
-Pure TypeScript, with no dependency on React Native or Expo — except for `react-native-uuid` used in `CreateEchoUseCase` for ID generation. Contains:
+Pure TypeScript, with no dependency on React Native or Expo. Contains:
 
 - **Models** — data interfaces (`Echo`, `Game`, `GameSummary`)
 - **Contracts** — interfaces that upper layers implement (`IEchoRepository`, `IGamesService`, `ISurfaceStrategy`)
@@ -235,10 +235,12 @@ Pure TypeScript, with no dependency on React Native or Expo — except for `reac
 
 ```typescript
 // CreateEchoUseCase only knows interfaces — doesn't know if the DB is SQLite, Firestore, or a mock
+// generateId is injected so the domain has no dependency on react-native-uuid
 export class CreateEchoUseCase {
   constructor(
-    private readonly repository: IEchoRepository,
+    private readonly repository: IEchoWriteRepository,
     private readonly strategy: ISurfaceStrategy,
+    private readonly generateId: () => string,
   ) {}
   // ...
 }

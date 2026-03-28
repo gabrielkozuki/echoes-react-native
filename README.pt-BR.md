@@ -227,7 +227,7 @@ O projeto é organizado em três camadas com dependências unidirecionais aponta
 
 ### Camada de Domínio
 
-TypeScript puro, sem dependência de React Native ou Expo — com exceção de `react-native-uuid` usado no `CreateEchoUseCase` para geração de IDs. Contém:
+TypeScript puro, sem dependência de React Native ou Expo. Contém:
 
 - **Modelos** — interfaces de dados (`Echo`, `Game`, `GameSummary`)
 - **Contratos** — interfaces que as camadas superiores implementam (`IEchoRepository`, `IGamesService`, `ISurfaceStrategy`)
@@ -235,10 +235,12 @@ TypeScript puro, sem dependência de React Native ou Expo — com exceção de `
 
 ```typescript
 // CreateEchoUseCase só conhece interfaces — não sabe se o banco é SQLite, Firestore ou mock
+// generateId é injetado para que o domínio não dependa de react-native-uuid
 export class CreateEchoUseCase {
   constructor(
-    private readonly repository: IEchoRepository,
+    private readonly repository: IEchoWriteRepository,
     private readonly strategy: ISurfaceStrategy,
+    private readonly generateId: () => string,
   ) {}
   // ...
 }
