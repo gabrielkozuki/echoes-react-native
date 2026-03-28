@@ -4,11 +4,14 @@ import { Echo } from '@/domain/models/Echo';
 
 interface EchoState {
   resurgence: Echo | null;
+  pendingResurgence: Echo | null;
 }
 
 interface EchoActions {
   setResurgence: (echo: Echo) => void;
   dismissResurgence: () => void;
+  setPendingResurgence: (echo: Echo) => void;
+  consumePendingResurgence: () => void;
 }
 
 export type EchoStore = EchoState & EchoActions;
@@ -16,8 +19,11 @@ export type EchoStore = EchoState & EchoActions;
 export const createEchoStore = () =>
   create<EchoStore>()((set) => ({
     resurgence: null,
+    pendingResurgence: null,
     setResurgence: (echo) => set({ resurgence: echo }),
     dismissResurgence: () => set({ resurgence: null }),
+    setPendingResurgence: (echo) => set({ pendingResurgence: echo }),
+    consumePendingResurgence: () => set(s => ({ resurgence: s.pendingResurgence, pendingResurgence: null })),
   }));
 
 type EchoStoreHook = UseBoundStore<StoreApi<EchoStore>>;

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { RootStackParamList, MainTabParamList } from '@/presentation/navigation/types';
 import { colors } from '@/presentation/theme/colors';
+import { useEchoStore } from '@/presentation/stores/echoStore';
 import { typography } from '@/presentation/theme/typography';
 import { spacing } from '@/presentation/theme/spacing';
 import HomeScreen from '@/presentation/screens/home/HomeScreen';
@@ -20,6 +22,15 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const MainTabs = () => {
   const insets = useSafeAreaInsets();
+  const store = useEchoStore();
+  const consumePendingResurgence = store(s => s.consumePendingResurgence);
+  const pendingResurgence = store(s => s.pendingResurgence);
+
+  useFocusEffect(useCallback(() => {
+    if (pendingResurgence) {
+      consumePendingResurgence();
+    }
+  }, [pendingResurgence, consumePendingResurgence]));
 
   return (
   <Tab.Navigator

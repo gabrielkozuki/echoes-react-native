@@ -143,9 +143,9 @@ const WriteEchoScreen = () => {
             { backgroundColor: canSave ? accentColor : colors.surface, paddingBottom: insets.bottom + spacing.md },
           ]}
           onPress={async () => {
+            Keyboard.dismiss();
             const saved = await save();
             if (saved) {
-              Keyboard.dismiss();
               navigation.dispatch(
                 CommonActions.reset({ index: 0, routes: [{ name: 'MainTabs' }] })
               );

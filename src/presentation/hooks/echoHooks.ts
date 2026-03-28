@@ -47,7 +47,7 @@ export const useAddEcho = () => {
   const { createEchoUseCase } = useDI();
   const queryClient = useQueryClient();
   const store = useEchoStore();
-  const setResurgence = store(s => s.setResurgence);
+  const setPendingResurgence = store(s => s.setPendingResurgence);
 
   return useMutation({
     mutationFn: ({
@@ -66,7 +66,7 @@ export const useAddEcho = () => {
       queryClient.invalidateQueries({ queryKey: echoQueryKeys.all }); // invalidating the root key cascades to all four sub-keys
 
       if (resurgence) {
-        setResurgence(resurgence);
+        setPendingResurgence(resurgence);
       }
     },
   });
