@@ -27,7 +27,7 @@ Echoes é um diário de jogos — um espaço para registrar suas experiências e
 
 ## Vídeo demonstrativo
 
-🔗 link aqui
+🔗 [https://youtu.be/UUvHeavCwt0](https://youtu.be/UUvHeavCwt0)
 
 Obs: a memória do Echo (ressurgência) aparece instantaneamente após cadastros posteriores ao primeiro, pois em ambiente de desenvolvimento está programado para aparecer após 30 segundos. Em produção um Echo pode aparecer entre 30 e 365 dias.
 

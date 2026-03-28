@@ -27,7 +27,7 @@ Echoes is a game journal — a space to record your experiences, with a mechanic
 
 ## Demo Video
 
-🔗 link here
+🔗 [https://youtu.be/UUvHeavCwt0](https://youtu.be/UUvHeavCwt0)
 
 Note: the Echo memory (resurgence) appears immediately after entries subsequent to the first one, because in development it is configured to appear after 30 seconds. In production, an Echo may appear between 30 and 365 days later.
 
