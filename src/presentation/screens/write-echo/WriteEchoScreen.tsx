@@ -10,10 +10,10 @@ import {
   Platform,
   ImageBackground,
   Linking,
+  Keyboard,
   StyleSheet,
 } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { StackActions } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp, CommonActions } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -145,7 +145,10 @@ const WriteEchoScreen = () => {
           onPress={async () => {
             const saved = await save();
             if (saved) {
-              requestAnimationFrame(() => navigation.dispatch(StackActions.popToTop()));
+              Keyboard.dismiss();
+              navigation.dispatch(
+                CommonActions.reset({ index: 0, routes: [{ name: 'MainTabs' }] })
+              );
             }
           }}
           disabled={!canSave || saving}
