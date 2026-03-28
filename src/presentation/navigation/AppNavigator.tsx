@@ -4,7 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { RootStackParamList, MainTabParamList } from '@/presentation/navigation/types';
 import { colors } from '@/presentation/theme/colors';
@@ -23,14 +24,19 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 const MainTabs = () => {
   const insets = useSafeAreaInsets();
   const store = useEchoStore();
-  const consumePendingResurgence = store(s => s.consumePendingResurgence);
-  const pendingResurgence = store(s => s.pendingResurgence);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'MainTabs'>>();
 
   useFocusEffect(useCallback(() => {
-    if (pendingResurgence) {
-      consumePendingResurgence();
-    }
-  }, [pendingResurgence, consumePendingResurgence]));
+    const unsubscribe = navigation.addListener('transitionEnd', (e) => {
+      if (!e.data.closing) {
+        const state = store.getState();
+        if (state.pendingResurgence) {
+          state.consumePendingResurgence();
+        }
+      }
+    });
+    return unsubscribe;
+  }, [store, navigation]));
 
   return (
   <Tab.Navigator

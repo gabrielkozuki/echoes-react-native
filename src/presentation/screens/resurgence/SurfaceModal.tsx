@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  Modal,
   View,
   Text,
   TouchableOpacity,
@@ -28,6 +27,8 @@ const IntroCard = ({ onReveal }: { onReveal: () => void }) => {
   const line2Y      = useRef(new Animated.Value(10)).current;
   const tapAlpha    = useRef(new Animated.Value(0)).current;
 
+  const [touchable, setTouchable] = useState(false);
+
   useEffect(() => {
     Animated.sequence([
       Animated.timing(screenAlpha, { toValue: 1, duration: 700, useNativeDriver: true }),
@@ -41,6 +42,8 @@ const IntroCard = ({ onReveal }: { onReveal: () => void }) => {
       Animated.delay(700),
       Animated.timing(tapAlpha,   { toValue: 1, duration: 600, useNativeDriver: true }),
     ]).start();
+    const timer = setTimeout(() => setTouchable(true), 700);
+    return () => clearTimeout(timer);
   }, []);
 
   const handlePress = () => {
@@ -50,25 +53,29 @@ const IntroCard = ({ onReveal }: { onReveal: () => void }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={handlePress} accessibilityLabel="Ver echo ressurgido">
-      <Animated.View style={[styles.introRoot, { opacity: screenAlpha }]}>
-        <View style={styles.introContent}>
-          <Animated.Text style={[styles.introLine1, { opacity: line1Alpha }]}>
-            enquanto você guardava essa memória,
-          </Animated.Text>
+    <Animated.View
+      style={[styles.introRoot, { opacity: screenAlpha }]}
+      pointerEvents={touchable ? 'auto' : 'none'}
+    >
+      <TouchableWithoutFeedback onPress={handlePress} accessibilityLabel="Ver echo ressurgido">
+        <View style={StyleSheet.absoluteFill} />
+      </TouchableWithoutFeedback>
+      <View style={styles.introContent} pointerEvents="none">
+        <Animated.Text style={[styles.introLine1, { opacity: line1Alpha }]}>
+          enquanto você guardava essa memória,
+        </Animated.Text>
 
-          <Animated.Text
-            style={[styles.introLine2, { opacity: line2Alpha, transform: [{ translateY: line2Y }] }]}
-          >
-            algo do passado{'\n'}acordou.
-          </Animated.Text>
-        </View>
+        <Animated.Text
+          style={[styles.introLine2, { opacity: line2Alpha, transform: [{ translateY: line2Y }] }]}
+        >
+          algo do passado{'\n'}acordou.
+        </Animated.Text>
+      </View>
 
-        <Animated.View style={[styles.tapHint, { opacity: tapAlpha }]}>
-          <Text style={styles.tapText}>toque para ver</Text>
-        </Animated.View>
+      <Animated.View style={[styles.tapHint, { opacity: tapAlpha }]} pointerEvents="none">
+        <Text style={styles.tapText}>toque para ver</Text>
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </Animated.View>
   );
 };
 
@@ -219,20 +226,17 @@ export const SurfaceModal = () => {
   if (!resurgence) return null;
 
   return (
-    <Modal transparent animationType="fade" visible statusBarTranslucent>
-      <View style={styles.modalRoot}>
-        {phase === 'intro'
-          ? <IntroCard onReveal={reveal} />
-          : <EchoCard resurgence={resurgence} daysLabel={daysLabel} onDismiss={dismiss} />
-        }
-      </View>
-    </Modal>
+    <View style={[StyleSheet.absoluteFill, styles.modalRoot]} pointerEvents="box-none">
+      {phase === 'intro'
+        ? <IntroCard onReveal={reveal} />
+        : <EchoCard resurgence={resurgence} daysLabel={daysLabel} onDismiss={dismiss} />
+      }
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   modalRoot: {
-    flex: 1,
     backgroundColor: '#08080f',
   },
 
